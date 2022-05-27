@@ -14,7 +14,7 @@ source(here("lib/limma_test.R"))
 
 data_file <- here("data/all_crapome_data.xlsx")
 
-out_dir <- here(file.path("results", Sys.Date()))
+out_dir <- here("results/prober-MS", Sys.Date())
 dir.create(out_dir, recursive = T)
 
 
