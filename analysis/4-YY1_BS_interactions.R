@@ -12,18 +12,18 @@ library(ggforce)
 out_dir <- file.path("results/string_interactions", Sys.Date())
 dir.create(out_dir, recursive = T)
 
-rev_data <- list.files(here("data/rev_MS"), pattern = "^[A-Za-z0-9].+\\.xlsx", full.names = T) %>%
+ms_data <- list.files(here("data/MS"), pattern = "^[A-Za-z0-9].+\\.xlsx", full.names = T) %>%
   set_names(., str_replace(basename(.), "\\.xlsx$", "")) %>% map(read_excel)
 
 
 bs_data <-
-  bind_rows(rev_data$`26-9_SAINT` %>%
+  bind_rows(ms_data$`26-9_SAINT` %>%
               filter(BAIT_SP >= 0.9) %>%
               select(PROTID) %>% mutate(site = "BS1"),
-            rev_data$`26-11-SAINT` %>%
+            ms_data$`26-11-SAINT` %>%
               filter(BAIT_SP >= 0.9) %>%
               select(PROTID) %>% mutate(site = "BS2"),
-            rev_data$`26-14-SAINT` %>%
+            ms_data$`26-14-SAINT` %>%
               filter(BAIT_SP >= 0.9) %>%
               select(PROTID) %>% mutate(site = "BS3"))
 

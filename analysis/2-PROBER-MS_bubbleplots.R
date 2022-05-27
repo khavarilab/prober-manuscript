@@ -9,7 +9,7 @@ out_dir <- here(file.path("results/bubbleplots", Sys.Date()))
 dir.create(out_dir, recursive = T)
 
 
-bubbleplot_data <- read_excel(here("./data/bubbleplot_dec20.xlsx"))
+bubbleplot_data <- read_excel(here("data/bubbleplot_dec20.xlsx"))
 
 
 bubbleplot_data %>%

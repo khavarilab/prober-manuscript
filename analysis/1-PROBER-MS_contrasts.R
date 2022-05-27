@@ -477,12 +477,12 @@ contrast_limma_analysis(data = data, quant_norm = T,
                          plot_path = file.path(contrast_dir, "hTERT_C250T-MUT_vs_WT_groups"))
 
 #####
-# Data in revision
+# additional MS data
 
-rev_data <- list.files(here("data/rev_MS"), pattern = "^[A-Za-z0-9].+\\.xlsx", full.names = T) %>%
+ms_data <- list.files(here("data/MS"), pattern = "^[A-Za-z0-9].+\\.xlsx", full.names = T) %>%
   set_names(., str_replace(basename(.), "\\.xlsx$", "")) %>% map(read_excel)
 
-ms_protein_list <- map(rev_data, ~ .$PROTID) %>% unlist() %>% unique() %>%
+ms_protein_list <- map(ms_data, ~ .$PROTID) %>% unlist() %>% unique() %>%
   stringi::stri_replace_all(regex = "(C.+)ORF(\\d+)", replacement = "$1orf$2") %>%
   c(ms_protein_list)
 
@@ -526,11 +526,11 @@ ms_protein_entrez %>%
 
 ## YY1 U2OS vs 293T
 
-yy1_celltype_genes <- unique(c(rev_data$`U2OS-YY1`  %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID),
+yy1_celltype_genes <- unique(c(ms_data$`U2OS-YY1`  %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID),
                                   data$YY1  %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID)))
 
 list(YY1_293T = data$YY1 %>% rename_with(~ str_replace(., "-R?(\\d)$", "_293T-R\\1"), cols = starts_with("IP_")),
-     YY1_U2OS = rev_data$`U2OS-YY1` %>% rename_with(~ str_replace(., "-R?(\\d)$", "_U2OS-R\\1"), cols = starts_with("IP_"))) %>%
+     YY1_U2OS = ms_data$`U2OS-YY1` %>% rename_with(~ str_replace(., "-R?(\\d)$", "_U2OS-R\\1"), cols = starts_with("IP_"))) %>%
   contrast_limma_analysis(quant_norm = T,
                            contrast_labels = c("YY1_U2OS", "YY1_293T"),
                            bait1 = "SCR\\d?",
@@ -550,11 +550,11 @@ list(YY1_293T = data$YY1 %>% rename_with(~ str_replace(., "-R?(\\d)$", "_293T-R\
                            plot_path = file.path(contrast_dir, "YY1-U2OS_vs_293T_full"))
 
 
-bs1_celltype_genes <- unique(c(rev_data$`U2OS-26-9`  %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID),
-                               rev_data$`26-9_SAINT`  %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID)))
+bs1_celltype_genes <- unique(c(ms_data$`U2OS-26-9`  %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID),
+                               ms_data$`26-9_SAINT`  %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID)))
 
-list(BS1_293T = rev_data$`26-9_SAINT` %>% rename_with(~ str_replace(., "-R?(\\d)$", "_293T-R\\1"), cols = starts_with("IP_")),
-     BS1_U2OS = rev_data$`U2OS-26-9` %>% rename_with(~ str_replace(., "-R?(\\d)$", "_U2OS-R\\1"), cols = starts_with("IP_"))) %>%
+list(BS1_293T = ms_data$`26-9_SAINT` %>% rename_with(~ str_replace(., "-R?(\\d)$", "_293T-R\\1"), cols = starts_with("IP_")),
+     BS1_U2OS = ms_data$`U2OS-26-9` %>% rename_with(~ str_replace(., "-R?(\\d)$", "_U2OS-R\\1"), cols = starts_with("IP_"))) %>%
   contrast_limma_analysis(quant_norm = T,
                            contrast_labels = c("BS1_U2OS", "BS1_293T"),
                            bait1 = "SCR\\d?",
@@ -576,11 +576,11 @@ list(BS1_293T = rev_data$`26-9_SAINT` %>% rename_with(~ str_replace(., "-R?(\\d)
 
 ### DNA-Bead Pull Downs
 
-yy1_dna_pd_genes <- unique(c(rev_data$`YY1PD_vs_beads+SCR`%>% filter(BAIT_SP >= 0.9) %>% pull(PROTID),
+yy1_dna_pd_genes <- unique(c(ms_data$`YY1PD_vs_beads+SCR`%>% filter(BAIT_SP >= 0.9) %>% pull(PROTID),
                              data$YY1  %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID)))
 
 list(YY1_prober = data$YY1 %>% rename_with(~ str_replace(., "-R?(\\d)$", "_prober-R\\1"), cols = starts_with("IP_")),
-     YY1_dna_pd = rev_data$`YY1PD_vs_beads+SCR` %>% rename_with(~ str_replace(., "-R?(\\d)$", "_PD-R\\1"), cols = starts_with("IP_"))) %>%
+     YY1_dna_pd = ms_data$`YY1PD_vs_beads+SCR` %>% rename_with(~ str_replace(., "-R?(\\d)$", "_PD-R\\1"), cols = starts_with("IP_"))) %>%
   contrast_limma_analysis(quant_norm = T,
                            contrast_labels = c("YY1_dna_pd", "YY1_prober"),
                            bait1 = "SCR\\d?",
@@ -600,11 +600,11 @@ list(YY1_prober = data$YY1 %>% rename_with(~ str_replace(., "-R?(\\d)$", "_probe
                            plot_path = file.path(contrast_dir, "YY1-PROBER_vs_DNAPD_full"))
 
 
-nfkbnotnf_dna_pd_genes <- unique(c(rev_data$`NFkBPD–TNF` %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID),
+nfkbnotnf_dna_pd_genes <- unique(c(ms_data$`NFkBPD–TNF` %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID),
                              data$`NFkB(-TNF)`  %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID)))
 
 list(NFKB_prober = data$`NFkB(-TNF)` %>% rename_with(~ str_replace(., "[_-]R?(\\d)$", "_prober-R\\1"), cols = starts_with("IP_")),
-     NFKB_dna_pd = rev_data$`NFkBPD–TNF` %>%
+     NFKB_dna_pd = ms_data$`NFkBPD–TNF` %>%
        rename_with(~ str_replace(., "RELA", "NFKB_NOTNF_R"), cols = starts_with("IP_")) %>%
        rename_with(~ str_replace(., "SCR", "S1_NOTNF_R"), cols = starts_with("IP_")) %>%
                      rename_with(~ str_replace(., "[_-]R?(\\d)$", "_PD-R\\1"), cols = starts_with("IP_"))) %>%
@@ -627,11 +627,11 @@ list(NFKB_prober = data$`NFkB(-TNF)` %>% rename_with(~ str_replace(., "[_-]R?(\\
                            plot_path = file.path(contrast_dir, "NFKB-TNF-PROBER_vs_DNAPD_full"))
 
 
-nfkbtnf_dna_pd_genes <- unique(c(rev_data$`NFkBPD+TNF` %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID),
+nfkbtnf_dna_pd_genes <- unique(c(ms_data$`NFkBPD+TNF` %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID),
                               data$`NFkB (+TNF)`  %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID)))
 
 list(NFKB_prober = data$`NFkB (+TNF)` %>% rename_with(~ str_replace(., "[_-]R?(\\d)$", "_prober-R\\1"), cols = starts_with("IP_")),
-     NFKB_dna_pd = rev_data$`NFkBPD+TNF` %>%
+     NFKB_dna_pd = ms_data$`NFkBPD+TNF` %>%
        rename_with(~ str_replace(., "RELA\\+TNF", "NFKB_WITHTNF"), cols = starts_with("IP_")) %>%
        rename_with(~ str_replace(., "SCR\\+TNF", "S1_WITHTNF"), cols = starts_with("IP_")) %>%
        rename_with(~ str_replace(., "[_-]R?(\\d)$", "_PD-R\\1"), cols = starts_with("IP_"))) %>%
@@ -655,13 +655,13 @@ list(NFKB_prober = data$`NFkB (+TNF)` %>% rename_with(~ str_replace(., "[_-]R?(\
 
 
 
-nfkb_dna_pd_genes <- unique(c(rev_data$`NFkBPD+TNF` %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID),
-                              rev_data$`NFkBPD–TNF` %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID)))
+nfkb_dna_pd_genes <- unique(c(ms_data$`NFkBPD+TNF` %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID),
+                              ms_data$`NFkBPD–TNF` %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID)))
 
-list(NFKB_notnf = rev_data$`NFkBPD–TNF` %>%
+list(NFKB_notnf = ms_data$`NFkBPD–TNF` %>%
        rename_with(~ str_replace(., "RELA", "NFKB_NOTNF_R"), cols = starts_with("IP_")) %>%
        rename_with(~ str_replace(., "SCR", "S1_NOTNF_R"), cols = starts_with("IP_")),
-     NFKB_tnf = rev_data$`NFkBPD+TNF` %>%
+     NFKB_tnf = ms_data$`NFkBPD+TNF` %>%
        rename_with(~ str_replace(., "RELA\\+TNF", "NFKB_WITHTNF"), cols = starts_with("IP_")) %>%
        rename_with(~ str_replace(., "SCR\\+TNF", "S1_WITHTNF"), cols = starts_with("IP_"))) %>%
   contrast_limma_analysis(quant_norm = T,
@@ -686,13 +686,13 @@ list(NFKB_notnf = rev_data$`NFkBPD–TNF` %>%
 
 ### BioID
 
-yy1_bioid_genes <- unique(c(rev_data$`bioid-YY1` %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID),
+yy1_bioid_genes <- unique(c(ms_data$`bioid-YY1` %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID),
                              data$YY1  %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID)))
 
 list(YY1_prober = data$YY1 %>%
        rename_with(~ str_replace(., "SCR", "CTRL"), cols = starts_with("IP_")) %>%
        rename_with(~ str_replace(., "[-_]R?(\\d)$", "_prober-R\\1"), cols = starts_with("IP_")),
-     YY1_bioid = rev_data$`bioid-YY1` %>%
+     YY1_bioid = ms_data$`bioid-YY1` %>%
        rename_with(~ str_replace(., "NLS_BASU_GFP", "CTRL1"), cols = starts_with("IP_")) %>%
        # rename_with(~ str_replace(., "EGFP_BASU", "CTRL2"), cols = starts_with("IP_")) %>%
        rename_with(~ str_replace(., "[-_]R?(\\d)$", "_bioid-R\\1"), cols = starts_with("IP_"))) %>%
@@ -715,13 +715,13 @@ list(YY1_prober = data$YY1 %>%
                            plot_path = file.path(contrast_dir, "YY1-PROBER_vs_BioID_full"))
 
 
-nfkbnotnf_bioid_genes <- unique(c(rev_data$`bioid-RelA-TNF` %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID),
+nfkbnotnf_bioid_genes <- unique(c(ms_data$`bioid-RelA-TNF` %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID),
                                    data$`NFkB(-TNF)`  %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID)))
 
 list(NFKB_prober = data$`NFkB(-TNF)` %>%
        rename_with(~ str_replace(., "S(\\d)", "CTRL\\1"), cols = starts_with("IP_")) %>%
        rename_with(~ str_replace(., "[_-]R?(\\d)$", "_prober-R\\1"), cols = starts_with("IP_")),
-     NFKB_bioid = rev_data$`bioid-RelA-TNF` %>%
+     NFKB_bioid = ms_data$`bioid-RelA-TNF` %>%
        rename_with(~ str_replace(., "RELA", "NFKB_NOTNF"), cols = starts_with("IP_")) %>%
        # rename_with(~ str_replace(., "NLS_BASU_GFP", "CTRL1_NOTNF"), cols = starts_with("IP_")) %>%
        rename_with(~ str_replace(., "EGFP_BASU", "CTRL2_NOTNF"), cols = starts_with("IP_")) %>%
@@ -747,13 +747,13 @@ list(NFKB_prober = data$`NFkB(-TNF)` %>%
 
 
 
-nfkbtnf_bioid_genes <- unique(c(rev_data$`bioid-RelA+TNF` %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID),
+nfkbtnf_bioid_genes <- unique(c(ms_data$`bioid-RelA+TNF` %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID),
                                 data$`NFkB (+TNF)`  %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID)))
 
 list(NFKB_prober = data$`NFkB (+TNF)` %>%
        rename_with(~ str_replace(., "S(\\d)", "CTRL\\1"), cols = starts_with("IP_")) %>%
        rename_with(~ str_replace(., "[_-]R?(\\d)$", "_prober-R\\1"), cols = starts_with("IP_")),
-     NFKB_bioid = rev_data$`bioid-RelA+TNF` %>%
+     NFKB_bioid = ms_data$`bioid-RelA+TNF` %>%
        rename_with(~ str_replace(., "RELA_TNF", "NFKB_WITHTNF"), cols = starts_with("IP_")) %>%
        rename_with(~ str_replace(., "NLS_BASU_GFP(_TNF)?", "CTRL1_WITHTNF"), cols = starts_with("IP_")) %>%
        # rename_with(~ str_replace(., "EGFP_BASU", "CTRL2_WITHTNF"), cols = starts_with("IP_")) %>%
@@ -779,14 +779,14 @@ list(NFKB_prober = data$`NFkB (+TNF)` %>%
 
 
 
-nfkb_bioid_genes <- unique(c(rev_data$`NFkBPD+TNF` %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID),
-                              rev_data$`NFkBPD–TNF` %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID)))
+nfkb_bioid_genes <- unique(c(ms_data$`NFkBPD+TNF` %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID),
+                              ms_data$`NFkBPD–TNF` %>% filter(BAIT_SP >= 0.9) %>% pull(PROTID)))
 
-list(NFKB_notnf = rev_data$`bioid-RelA-TNF` %>%
+list(NFKB_notnf = ms_data$`bioid-RelA-TNF` %>%
        rename_with(~ str_replace(., "RELA", "NFKB_NOTNF"), cols = starts_with("IP_")) %>%
        rename_with(~ str_replace(., "NLS_BASU_GFP", "CTRL1_NOTNF"), cols = starts_with("IP_")) %>%
        rename_with(~ str_replace(., "EGFP_BASU", "CTRL2_NOTNF"), cols = starts_with("IP_")),
-     NFKB_tnf = rev_data$`bioid-RelA+TNF` %>%
+     NFKB_tnf = ms_data$`bioid-RelA+TNF` %>%
        rename_with(~ str_replace(., "RELA_TNF", "NFKB_WITHTNF"), cols = starts_with("IP_")) %>%
        rename_with(~ str_replace(., "NLS_BASU_GFP(_TNF)?", "CTRL1_WITHTNF"), cols = starts_with("IP_")) %>%
        rename_with(~ str_replace(., "EGFP_BASU(_TNF)?", "CTRL2_WITHTNF"), cols = starts_with("IP_"))) %>%
@@ -870,57 +870,57 @@ saint_scatter <- function(saint_x, saint_y, plot_dir, plot_name = "SAINT_scatter
   ggsave(file.path(plot_dir, paste0(plot_name, ".pdf")), width = 5, height = 5)
 }
 
-saint_scatter(rev_data$`bioid-YY1`, data$YY1, scatter_dir,
+saint_scatter(ms_data$`bioid-YY1`, data$YY1, scatter_dir,
               label_x = "BioID YY1", label_y = "PROBER YY1",
               plot_name = "YY1_PROBER_vs_BioID")
 
 
 
-saint_scatter(rev_data$`YY1PD_vs_beads+SCR`, data$YY1, scatter_dir,
+saint_scatter(ms_data$`YY1PD_vs_beads+SCR`, data$YY1, scatter_dir,
               label_x = "DNA PD YY1 ", label_y = "PROBER YY1",
               plot_name = "YY1_PROBER_vs_DNA-PD")
 
 
 
-saint_scatter(rev_data$`26-11-SAINT`, rev_data$`26-9_SAINT`, scatter_dir,
+saint_scatter(ms_data$`26-11-SAINT`, ms_data$`26-9_SAINT`, scatter_dir,
               label_x = "YY1 BS2", label_y = "YY1 BS1",
               plot_name = "PROBER_YY1_BS1_vs_BS2")
-saint_scatter(rev_data$`26-14-SAINT`, rev_data$`26-9_SAINT`, scatter_dir,
+saint_scatter(ms_data$`26-14-SAINT`, ms_data$`26-9_SAINT`, scatter_dir,
               label_x = "YY1 BS3", label_y = "YY1 BS1",
               plot_name = "PROBER_YY1_BS1_vs_BS3")
-saint_scatter(rev_data$`26-14-SAINT`, rev_data$`26-11-SAINT`, scatter_dir,
+saint_scatter(ms_data$`26-14-SAINT`, ms_data$`26-11-SAINT`, scatter_dir,
               label_x = "YY1 BS3", label_y = "YY1 BS2",
               plot_name = "PROBER_YY1_BS2_vs_BS3")
 
 
-saint_scatter(rev_data$`26-9_SAINT`, rev_data$`U2OS-26-9`, scatter_dir,
+saint_scatter(ms_data$`26-9_SAINT`, ms_data$`U2OS-26-9`, scatter_dir,
               label_x = "293T YY1 BS1", label_y = "U2OS YY1 BS1",
               plot_name = "YY1_BS1_U2OS_vs_293T")
 
-saint_scatter(data$YY1, rev_data$`U2OS-YY1`, scatter_dir,
+saint_scatter(data$YY1, ms_data$`U2OS-YY1`, scatter_dir,
               label_x = "293T YY1", label_y = "U2OS YY1",
               plot_name = "YY1_U2OS_vs_293T")
 
 
-saint_scatter(rev_data$`bioid-RelA+TNF`, data$`NFkB (+TNF)`, scatter_dir,
+saint_scatter(ms_data$`bioid-RelA+TNF`, data$`NFkB (+TNF)`, scatter_dir,
               label_x = "BioID RelA +TNF", label_y = "PROBER NFkB +TNF",
               plot_name = "NFKB+TNF_PROBER_vs_BioID",
               additional_labels = c("NFKBIB", "NFKBIA", "EP300", "RELB",
                                     "CREBBP", "NFKBIE", "NFKB2", "NFKB1", "RELA"))
 
-saint_scatter(rev_data$`bioid-RelA-TNF`, data$`NFkB(-TNF)`, scatter_dir,
+saint_scatter(ms_data$`bioid-RelA-TNF`, data$`NFkB(-TNF)`, scatter_dir,
               label_x = "BioID RelA -TNF", label_y = "PROBER NFkB -TNF",
               plot_name = "NFKB-TNF_PROBER_vs_BioID",
               additional_labels = c("NFKBIB", "NFKBIA", "EP300", "RELB",
                                     "CREBBP", "NFKBIE", "NFKB2", "NFKB1", "RELA"))
 
-saint_scatter(rev_data$`NFkBPD+TNF`, data$`NFkB (+TNF)`, scatter_dir,
+saint_scatter(ms_data$`NFkBPD+TNF`, data$`NFkB (+TNF)`, scatter_dir,
               label_x = "DNA PD NFkB+TNF", label_y = "PROBER NFkB+TNF",
               plot_name = "NFKB+TNF_PROBER_vs_DNAPD",
               additional_labels = c("NFKBIB", "NFKBIA", "EP300", "RELB",
                                     "CREBBP", "NFKBIE", "NFKB2", "NFKB1", "RELA"))
 
-saint_scatter(rev_data$`NFkBPD–TNF`, data$`NFkB(-TNF)`, scatter_dir,
+saint_scatter(ms_data$`NFkBPD–TNF`, data$`NFkB(-TNF)`, scatter_dir,
               label_x = "DNA PD NFkB-TNF", label_y = "PROBER NFkB-TNF",
               plot_name = "NFKB-TNF_PROBER_vs_DNAPD",
               additional_labels = c("NFKBIB", "NFKBIA", "EP300", "RELB",
@@ -928,14 +928,14 @@ saint_scatter(rev_data$`NFkBPD–TNF`, data$`NFkB(-TNF)`, scatter_dir,
 
 
 
-saint_scatter(rev_data$`NFkBPD–TNF`, rev_data$`NFkBPD+TNF`, scatter_dir,
+saint_scatter(ms_data$`NFkBPD–TNF`, ms_data$`NFkBPD+TNF`, scatter_dir,
               label_x = "DNA-PD NFkB -TNF", label_y = "DNA-PD NFkB +TNF",
               plot_name = "NFKB_DNAPD_+TNF_vs_-TNF",
               additional_labels = c("NFKBIB", "NFKBIA", "EP300", "RELB",
                                     "CREBBP", "NFKBIE", "NFKB2", "NFKB1", "RELA"))
 
 
-saint_scatter(rev_data$`bioid-RelA-TNF`, rev_data$`bioid-RelA+TNF`, scatter_dir,
+saint_scatter(ms_data$`bioid-RelA-TNF`, ms_data$`bioid-RelA+TNF`, scatter_dir,
               label_both = 25,
               label_x = "BioID RelA -TNF", label_y = "BioID RelA +TNF",
               plot_name = "RelA_BioID_+TNF_vs_-TNF",
