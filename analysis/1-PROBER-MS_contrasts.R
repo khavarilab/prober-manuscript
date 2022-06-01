@@ -300,8 +300,9 @@ contrast_limma_analysis(data, quant_norm = T,
                          saint_cutoff = 0,
                          pseudo_count = 2,
                          min_protein_count = 10,
-                         protein_labels = protein_chromatin_go_terms$PROTID,
-                         protein_highlights = nfkb_tnf_saint_genes,
+                         # protein_labels = protein_chromatin_go_terms$PROTID,
+                         protein_highlights = protein_chromatin_go_terms$PROTID,
+                         # protein_highlights = nfkb_tnf_saint_genes,
                          logFC_label = "NFkB +TNFa vs vehicle (log2FC)",
                          plot_path = file.path(contrast_dir, "NFkB-TNF_vs_vehicle_full"))
 
@@ -344,13 +345,15 @@ contrast_limma_analysis(data, quant_norm = T,
                          condition1 = "NOIFN",
                          condition2 = "WITHIFN",
                          contrast_name = "baitBAIT2.conditionCOND2",
-                         protein_labels = protein_chromatin_go_terms$PROTID,
+                         # protein_labels = protein_chromatin_go_terms$PROTID,
+                         protein_highlights = protein_chromatin_go_terms$PROTID,
+                         # protein_highlights = stat_ifn_saint_genes,
+
                          min_protein_count = 10,
                          pseudo_count = 2,
                          fdr_cutoff = 0.25,
                          # p_cutoff = 0.05,
                          saint_cutoff = 0,
-                         protein_highlights = stat_ifn_saint_genes,
                          logFC_label = "STAT1 +IFNg vs vehicle (log2FC)",
                          plot_path = file.path(contrast_dir, "STAT1-IFN_vs_vehicle_full"))
 
@@ -369,8 +372,9 @@ contrast_limma_analysis(data, quant_norm = T,
                          fdr_cutoff = 0.25,
                          # p_cutoff = 0.05,
                          saint_cutoff = 0,
-                         protein_labels = protein_chromatin_go_terms$PROTID,
-                         protein_highlights = yy1_kd_saint_genes,
+                         # protein_labels = protein_chromatin_go_terms$PROTID,
+                         protein_highlights = protein_chromatin_go_terms$PROTID,
+                         # protein_highlights = yy1_kd_saint_genes,
                          logFC_label = "YY1-KD vs mock (log2FC)",
                          plot_path = file.path(contrast_dir, "YY1-KD_vs_mock_groups"))
 
@@ -389,8 +393,9 @@ contrast_limma_analysis(data, quant_norm = T,
                          fdr_cutoff = 0.25,
                          # p_cutoff = 0.05,
                          saint_cutoff = 0,
-                         protein_labels = protein_chromatin_go_terms$PROTID,
-                         protein_highlights = rela_kd_saint_genes,
+                         # protein_labels = protein_chromatin_go_terms$PROTID,
+                         protein_highlights = protein_chromatin_go_terms$PROTID,
+                         # protein_highlights = rela_kd_saint_genes,
                          logFC_label = "RELA-KD vs mock (log2FC)",
                          plot_path = file.path(contrast_dir, "NFkB-TNF_RelA-KD_vs_mock_groups"))
 
@@ -408,8 +413,9 @@ contrast_limma_analysis(data = data, quant_norm = T,
                          fdr_cutoff = 0.25,
                          # p_cutoff = 0.05,
                          saint_cutoff = 0,
-                         protein_labels = protein_chromatin_go_terms$PROTID,
-                         protein_highlights = rs7296179_saint_genes,
+                         # protein_labels = protein_chromatin_go_terms$PROTID,
+                         protein_highlights = protein_chromatin_go_terms$PROTID,
+                         # protein_highlights = rs7296179_saint_genes,
                          plot_path = file.path(contrast_dir, "rS7296179_C-allele_vs_G-allele_groups"))
 
 
@@ -429,9 +435,10 @@ contrast_limma_analysis(data = data, quant_norm = T,
                          # p_cutoff = 0.05,
                          p_limit = 2e-4,
                          saint_cutoff = 0,
-                         protein_labels = protein_chromatin_go_terms$PROTID,
-                         protein_highlights = c("ELF1", "ELF2", "ETV3", "ELK1", "ERF",
-                                                tert161_saint_genes),
+                         # protein_labels = protein_chromatin_go_terms$PROTID,
+                         protein_highlights = protein_chromatin_go_terms$PROTID,
+                         # protein_highlights = c("ELF1", "ELF2", "ETV3", "ELK1", "ERF",
+                         #                        tert161_saint_genes),
                          plot_path = file.path(contrast_dir, "hTERT_A161C-MUT_vs_WT_groups"))
 
 
@@ -450,9 +457,10 @@ contrast_limma_analysis(data = data, quant_norm = T,
                          # p_cutoff = 0.05,
                          p_limit = 3e-4,
                          saint_cutoff = 0,
-                         protein_labels = protein_chromatin_go_terms$PROTID,
-                         protein_highlights = c("ELF1", "ELF2", "ETV3", "ELK1", "ERF",
-                                                tert228_saint_genes),
+                         # protein_labels = protein_chromatin_go_terms$PROTID,
+                         protein_highlights = protein_chromatin_go_terms$PROTID,
+                         # protein_highlights = c("ELF1", "ELF2", "ETV3", "ELK1", "ERF",
+                         #                        tert228_saint_genes),
                          plot_path = file.path(contrast_dir, "hTERT_C228T-MUT_vs_WT_groups"))
 
 
@@ -471,9 +479,10 @@ contrast_limma_analysis(data = data, quant_norm = T,
                          # p_cutoff = 0.01,
                          p_limit = 3e-5,
                          saint_cutoff = 0,
-                         protein_labels = protein_chromatin_go_terms$PROTID,
-                         protein_highlights = c("ELF1", "ELF2", "ETV3", "ELK1", "ERF",
-                                                tert250_saint_genes),
+                         # protein_labels = protein_chromatin_go_terms$PROTID,
+                         protein_highlights = protein_chromatin_go_terms$PROTID,
+                         # protein_highlights = c("ELF1", "ELF2", "ETV3", "ELK1", "ERF",
+                         #                        tert250_saint_genes),
                          plot_path = file.path(contrast_dir, "hTERT_C250T-MUT_vs_WT_groups"))
 
 #####
